@@ -9,19 +9,25 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Manager {
     private static Manager manager;
-    private final List<Table> restaurantTables = new ArrayList<>(10);
-    private int currentIndex;
+    private static Lock lock = new ReentrantLock();
     private static final int TABLE_AMOUNT = 10;
-    private final Lock lock = new ReentrantLock();
+
+    private final List<Table> restaurantTables = new ArrayList<>();
+    private int currentIndex;
 
     private final Queue<Order> orderQueue = new ConcurrentLinkedQueue<>();
     private final Queue<Dishes> dishesQueue = new ConcurrentLinkedQueue<>();
 
     public static Manager getInstance() {
-        if (manager == null) {
-            manager = new Manager();
+        lock.lock();
+        try {
+            if (manager == null) {
+                manager = new Manager();
+            }
+            return manager;
+        } finally {
+            lock.unlock();
         }
-        return manager;
     }
 
     private Manager() {
@@ -29,6 +35,8 @@ public class Manager {
             restaurantTables.add(new Table());
         }
     }
+
+
 
     public Table getNextTable() {
         lock.lock();

@@ -1,10 +1,10 @@
 package com.gmail.at.kotamadeo;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public class Waiter implements Runnable {
     private boolean continueWorking = true;
-    private static final int WAITER_SLEEP = 5;
+    private static final int WAITER_SLEEP_TIME = 100;
 
     @Override
     public void run() {
@@ -20,8 +20,8 @@ public class Waiter implements Runnable {
                 manager.getOrderQueue().add(order);
             }
             try {
-                SECONDS.sleep(WAITER_SLEEP);
-            } catch (InterruptedException e) {
+                MILLISECONDS.sleep(WAITER_SLEEP_TIME);
+            } catch (InterruptedException ignored) {
             }
         }
     }
